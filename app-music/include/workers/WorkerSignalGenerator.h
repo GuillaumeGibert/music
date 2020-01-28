@@ -16,9 +16,15 @@ protected:
 	void doWork();
 	bool init();
 
+public slots:
+	void setSignalFeatures(int nbHarmonics, float fFps, float fFrequency, float fAmplitude, float fPhase, float fDuration);
+
+signals:
+	void sigBoradcastHarmonicSignals(std::vector<std::vector<float>>);
+
 private:
 	SineGenerator* m_pSineGenerator;
 
-}
+};
 
 #endif

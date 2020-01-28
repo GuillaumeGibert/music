@@ -13,7 +13,6 @@
 #include <QMessagebox.h>
 #include <QFileDialog>
 
-#include "TemporalSignalDisplay.h"
 #include "BufferedSignalDisplay.h"
 
 // Qt stuff
