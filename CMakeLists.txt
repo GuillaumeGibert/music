@@ -54,6 +54,7 @@ find_package(Qt5Widgets)
 find_package(Qt5Gui)
 find_package(Qt5Core)
 find_package(Qt5OpenGL)
+find_package(Qt5Multimedia)
 
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)

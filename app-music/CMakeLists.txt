@@ -13,6 +13,7 @@ include_directories(${Qt5Widgets_INCLUDE_DIRS})
 include_directories(${Qt5Core_INCLUDE_DIRS})
 include_directories(${Qt5Gui_INCLUDE_DIRS})
 include_directories(${Qt5OpenGL_INCLUDE_DIRS})
+include_directories(${Qt5Multimedia_INCLUDE_DIRS})
 
 
 link_directories(${QT_LIB_DIR})
@@ -43,6 +44,7 @@ target_link_libraries(
 	Qt5::Core
 	Qt5::Gui
 	Qt5::OpenGL
+	Qt5::Multimedia
 	
       	${MISC_OPENGL_LIBRARY}
 	${MISC_GLU_LIBRARY}
