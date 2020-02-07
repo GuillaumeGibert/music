@@ -17,13 +17,20 @@ protected:
 	bool init();
 
 public slots:
-	void setSignalFeatures(int nbHarmonics, float fFps, float fFrequency, float fAmplitude, float fPhase, float fDuration);
+	void setSignalFeatures(float fFps, float fDuration, float fFrequency, int nbHarmonics, std::vector<float> vAmplitude, std::vector<float> vPhase);
+	void generate();
 
 signals:
-	void sigBoradcastHarmonicSignals(std::vector<std::vector<float>>);
+	void sigBroadcastHarmonicSignals(std::vector<std::vector<float>>);
 
 private:
 	SineGenerator* m_pSineGenerator;
+	float m_fFps;
+	float m_fDuration;
+	float m_fFrequency;
+	int m_i32NbHarmonics;
+	std::vector<float> m_vAmplitude;
+	std::vector<float> m_vPhase;
 
 };
 
