@@ -55,9 +55,13 @@ private:
 private:
 	Ui::MainWindow *ui;									// Also Qt stuff
 	
-	BufferedSignalDisplay* m_pWBufferedSignalDisplay;
+	BufferedSignalDisplay* m_pWFirstHarmonicSignalDisplay;
+	BufferedSignalDisplay* m_pWSecondHarmonicSignalDisplay;
+	BufferedSignalDisplay* m_pWThirdHarmonicSignalDisplay;
+	BufferedSignalDisplay* m_pWFourthHarmonicSignalDisplay;
 
-	BufferedSignalDisplay* m_pWPowerSpectrumDisplay;
+	BufferedSignalDisplay* m_pWFullSignalDisplay;
+	BufferedSignalDisplay* m_pWFullPowerSpectrumDisplay;
 };
 
 #endif // MAINWINDOW_H

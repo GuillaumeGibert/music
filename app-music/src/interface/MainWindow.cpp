@@ -11,10 +11,12 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-	m_pWBufferedSignalDisplay(nullptr), m_pWPowerSpectrumDisplay(nullptr)
+	m_pWFirstHarmonicSignalDisplay(nullptr), m_pWSecondHarmonicSignalDisplay(nullptr), 
+	m_pWThirdHarmonicSignalDisplay(nullptr), m_pWFourthHarmonicSignalDisplay(nullptr),
+	m_pWFullSignalDisplay(nullptr), m_pWFullPowerSpectrumDisplay(nullptr)
 {
 	ui->setupUi(this);
-	//this->setWindowTitle(QString("PPG"));
+	//this->setWindowTitle(QString("Music Note Synthesizer"));
 	
 	initWidgets();
 	
@@ -22,55 +24,115 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-	if (nullptr != m_pWBufferedSignalDisplay)
+	auto deleteAndNullify = [](auto pointer) -> void
 	{
-		delete m_pWBufferedSignalDisplay;
-		m_pWBufferedSignalDisplay = nullptr;
+		if (nullptr != pointer)
+		{
+			delete pointer;
+			pointer = nullptr;
+		}
+	};
+
+	deleteAndNullify(m_pWFirstHarmonicSignalDisplay);
+	deleteAndNullify(m_pWSecondHarmonicSignalDisplay);
+	deleteAndNullify(m_pWThirdHarmonicSignalDisplay);
+	deleteAndNullify(m_pWFourthHarmonicSignalDisplay);
+	deleteAndNullify(m_pWFullSignalDisplay);
+	deleteAndNullify(m_pWFullPowerSpectrumDisplay);
+	
+	/*
+	if (nullptr != m_pWFirstHarmonicSignalDisplay)
+	{
+		delete m_pWFirstHarmonicSignalDisplay;
+		m_pWFirstHarmonicSignalDisplay = nullptr;
 	}
 
-	if (nullptr != m_pWPowerSpectrumDisplay)
+	if (nullptr != m_pWSecondHarmonicSignalDisplay)
 	{
-		delete m_pWPowerSpectrumDisplay;
-		m_pWPowerSpectrumDisplay = nullptr;
+		delete m_pWSecondHarmonicSignalDisplay;
+		m_pWSecondHarmonicSignalDisplay = nullptr;
 	}
+
+	if (nullptr != m_pWThirdHarmonicSignalDisplay)
+	{
+		delete m_pWThirdHarmonicSignalDisplay;
+		m_pWThirdHarmonicSignalDisplay = nullptr;
+	}
+
+	if (nullptr != m_pWFourthHarmonicSignalDisplay)
+	{
+		delete m_pWFourthHarmonicSignalDisplay;
+		m_pWFourthHarmonicSignalDisplay = nullptr;
+	}
+
+	if (nullptr != m_pWFullSignalDisplay)
+	{
+		delete m_pWFullSignalDisplay;
+		m_pWFullSignalDisplay = nullptr;
+	}
+
+	if (nullptr != m_pWFullPowerSpectrumDisplay)
+	{
+		delete m_pWFullPowerSpectrumDisplay;
+		m_pWFullPowerSpectrumDisplay = nullptr;
+	}
+	*/
 }
 
 void MainWindow::initWidgets()
 {
-	// Buffered Signal display
-	if (nullptr == m_pWBufferedSignalDisplay)
+	// 1st Harmonic Signal display
+	if (nullptr == m_pWFirstHarmonicSignalDisplay)
 	{
-		m_pWBufferedSignalDisplay = new BufferedSignalDisplay();
-		m_pWBufferedSignalDisplay->setMinimumSize(600, 600);
-		m_pWBufferedSignalDisplay->setWidgetSize(QSize(640, 480));
+		m_pWFirstHarmonicSignalDisplay = new BufferedSignalDisplay();
+		m_pWFirstHarmonicSignalDisplay->setMinimumSize(600, 600);
+		m_pWFirstHarmonicSignalDisplay->setWidgetSize(QSize(640, 480));
 		std::vector<std::string> vSignalLabels;
 		vSignalLabels.push_back("R"); vSignalLabels.push_back("G"); vSignalLabels.push_back("B");
-		m_pWBufferedSignalDisplay->setSignalLabels(vSignalLabels);
-		m_pWBufferedSignalDisplay->setFps(30.0);
-		m_pWBufferedSignalDisplay->setXYRange(QSize(0, 15), QSize(0, 250));
-		m_pWBufferedSignalDisplay->setLegends("Time (s)", "Color amplitude");
-		m_pWBufferedSignalDisplay->setTicks(1, 50);
-		m_pWBufferedSignalDisplay->setDrawLine(true);
+		m_pWFirstHarmonicSignalDisplay->setSignalLabels(vSignalLabels);
+		m_pWFirstHarmonicSignalDisplay->setFps(30.0);
+		m_pWFirstHarmonicSignalDisplay->setXYRange(QSize(0, 15), QSize(0, 250));
+		m_pWFirstHarmonicSignalDisplay->setLegends("Time (s)", "Color amplitude");
+		m_pWFirstHarmonicSignalDisplay->setTicks(1, 50);
+		m_pWFirstHarmonicSignalDisplay->setDrawLine(true);
 
-		ui->vlSignal->addWidget(m_pWBufferedSignalDisplay);
+		ui->vlSignal->addWidget(m_pWFullSignalDisplay);
 	}
 
-	// Power Spectrum display
-	if (nullptr == m_pWPowerSpectrumDisplay)
+	// Full Signal display
+	if (nullptr == m_pWFullSignalDisplay)
 	{
-		m_pWPowerSpectrumDisplay = new BufferedSignalDisplay();
-		m_pWPowerSpectrumDisplay->setMinimumSize(600, 600);
-		m_pWPowerSpectrumDisplay->setWidgetSize(QSize(640, 480));
+		m_pWFullSignalDisplay = new BufferedSignalDisplay();
+		m_pWFullSignalDisplay->setMinimumSize(600, 600);
+		m_pWFullSignalDisplay->setWidgetSize(QSize(640, 480));
 		std::vector<std::string> vSignalLabels;
 		vSignalLabels.push_back("R"); vSignalLabels.push_back("G"); vSignalLabels.push_back("B");
-		m_pWPowerSpectrumDisplay->setSignalLabels(vSignalLabels);
-		m_pWPowerSpectrumDisplay->setFps(30.0);
-		m_pWPowerSpectrumDisplay->setXYRange(QSize(0, 15), QSize(0, 250));
-		m_pWPowerSpectrumDisplay->setLegends("Frequency (Hz)", "Power spectrum");
-		m_pWPowerSpectrumDisplay->setTicks(5, 50);
-		m_pWPowerSpectrumDisplay->setDrawLine(true);
+		m_pWFullSignalDisplay->setSignalLabels(vSignalLabels);
+		m_pWFullSignalDisplay->setFps(30.0);
+		m_pWFullSignalDisplay->setXYRange(QSize(0, 15), QSize(0, 250));
+		m_pWFullSignalDisplay->setLegends("Time (s)", "Color amplitude");
+		m_pWFullSignalDisplay->setTicks(1, 50);
+		m_pWFullSignalDisplay->setDrawLine(true);
 
-		ui->vlSignal->addWidget(m_pWPowerSpectrumDisplay);
+		ui->vlSignal->addWidget(m_pWFullSignalDisplay);
+	}
+
+	// Full Power Spectrum display
+	if (nullptr == m_pWFullPowerSpectrumDisplay)
+	{
+		m_pWFullPowerSpectrumDisplay = new BufferedSignalDisplay();
+		m_pWFullPowerSpectrumDisplay->setMinimumSize(600, 600);
+		m_pWFullPowerSpectrumDisplay->setWidgetSize(QSize(640, 480));
+		std::vector<std::string> vSignalLabels;
+		vSignalLabels.push_back("R"); vSignalLabels.push_back("G"); vSignalLabels.push_back("B");
+		m_pWFullPowerSpectrumDisplay->setSignalLabels(vSignalLabels);
+		m_pWFullPowerSpectrumDisplay->setFps(30.0);
+		m_pWFullPowerSpectrumDisplay->setXYRange(QSize(0, 15), QSize(0, 250));
+		m_pWFullPowerSpectrumDisplay->setLegends("Frequency (Hz)", "Power spectrum");
+		m_pWFullPowerSpectrumDisplay->setTicks(5, 50);
+		m_pWFullPowerSpectrumDisplay->setDrawLine(true);
+
+		ui->vlSignal->addWidget(m_pWFullPowerSpectrumDisplay);
 	}
 }
 
