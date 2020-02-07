@@ -17,7 +17,7 @@ public:
 	SineGenerator(float fFps, float fFrequency, float fAmplitude, float fPhase, float fDuration);
     ~SineGenerator();
 
-protected:
+public:
 	std::vector<float> generate();
 
 public slots:
