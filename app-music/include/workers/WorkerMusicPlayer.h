@@ -14,6 +14,7 @@ class WorkerMusicPlayer : public Worker
 
 public:
 	WorkerMusicPlayer();
+	WorkerMusicPlayer(float fSampleRate, float fDuration);
 	~WorkerMusicPlayer();
 
 protected:
@@ -23,13 +24,20 @@ protected:
 public slots:
 	void play();
 	void setSignalValues(std::vector<float> vSignalValues);
+	void setFps(float);
+	void setDuration(float);
 
 signals:
 	
 
 private:
-	
-
+	std::vector<float> m_vSignalValues;
+	float m_fFps;
+	float m_fDuration;
+	QAudioFormat m_oAudioFormat;
+	QAudioOutput* m_pAudioOutput;
+	QByteArray* m_pByteBuffer;
+	int m_i32NbSamples;
 };
 
 #endif
