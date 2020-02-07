@@ -9,14 +9,24 @@
 
 Application::Application()
 {
-
+	m_pWorkerSignalGenerator = nullptr;
+	m_pWorkerMusicPlayer = nullptr;
 }
 
 
 Application::~Application()
 {
+	if (nullptr != m_pWorkerSignalGenerator)
+	{
+		delete m_pWorkerSignalGenerator;
+		m_pWorkerSignalGenerator = nullptr;
+	}
 	
-	
+	if (nullptr != m_pWorkerMusicPlayer)
+	{
+		delete m_pWorkerMusicPlayer;
+		m_pWorkerMusicPlayer = nullptr;
+	}
 
 	// stops the threads
 	stopWorkerThreads();
@@ -38,7 +48,15 @@ void Application::init(MainWindow* window)
 
 void Application::initWorkers()
 {
+	if (nullptr == m_pWorkerSignalGenerator)
+	{
+		m_pWorkerSignalGenerator = new WorkerSignalGenerator();
+	}
 
+	if (nullptr == m_pWorkerMusicPlayer)
+	{
+		m_pWorkerMusicPlayer = new WorkerMusicPlayer();
+	}
 }
 
 void Application::registerMetaTypes()
@@ -55,16 +73,42 @@ void Application::setWorkerConnections()
 
 void Application::moveWorkersToThread()
 {
-	
+	// WorkerSignalGenerator
+	if (nullptr != m_pWorkerSignalGenerator)
+	{
+		m_pWorkerSignalGenerator->moveToThread(&m_TWorkerSignalGenerator);
+		m_TWorkerSignalGenerator.start();
+	}
+
+	// WorkerSignalGenerator
+	if (nullptr != m_pWorkerMusicPlayer)
+	{
+		m_pWorkerMusicPlayer->moveToThread(&m_TWorkerMusicPlayer);
+		m_TWorkerMusicPlayer.start();
+	}
 }
 
 void Application::stopWorkerThreads()
 {
-	
+	m_TWorkerSignalGenerator.quit();
+	m_TWorkerSignalGenerator.wait();
+
+	m_TWorkerMusicPlayer.quit();
+	m_TWorkerMusicPlayer.wait();
 }
 
 void Application::deleteWorkers()
 {
-	
+	if (nullptr != m_pWorkerSignalGenerator)
+	{
+		delete m_pWorkerSignalGenerator;
+		m_pWorkerSignalGenerator = nullptr;
+	}
+
+	if (nullptr != m_pWorkerMusicPlayer)
+	{
+		delete m_pWorkerMusicPlayer;
+		m_pWorkerMusicPlayer = nullptr;
+	}
 		
 }

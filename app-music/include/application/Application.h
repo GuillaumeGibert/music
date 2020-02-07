@@ -14,8 +14,8 @@
 // Qt
 #include <QThread>
 
-#include "SineGenerator.h"
-
+#include "workers/WorkerSignalGenerator.h"
+#include "workers/WorkerMusicPlayer.h"
 
 /**
 * \class Application
@@ -70,7 +70,11 @@ public:
 private:
 	MainWindow* m_window = nullptr;						/**< The main window. */
 	
-	
+	WorkerSignalGenerator* m_pWorkerSignalGenerator;
+	QThread m_TWorkerSignalGenerator;
+
+	WorkerMusicPlayer* m_pWorkerMusicPlayer;
+	QThread m_TWorkerMusicPlayer;
 };
 
 #endif
