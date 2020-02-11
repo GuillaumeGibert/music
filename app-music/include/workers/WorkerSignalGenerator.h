@@ -22,6 +22,7 @@ public slots:
 
 signals:
 	void sigBroadcastHarmonicSignals(std::vector<std::vector<float>>);
+	void sigBroadcastFullSignal(std::vector<float>);
 
 private:
 	SineGenerator* m_pSineGenerator;

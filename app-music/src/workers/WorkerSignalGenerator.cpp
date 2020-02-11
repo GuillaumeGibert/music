@@ -116,7 +116,31 @@ void WorkerSignalGenerator::generate()
 		l_vHarmonicSignals.push_back(m_pSineGenerator->generate());
 	}
 
+	std::vector<float> l_vFullSignal(static_cast<int>(m_fFps* m_fDuration), 0.0);
+	
+	auto elementSum = [&l_vFullSignal](std::vector<float>& v1) -> void
+	{
+		// checks if the output vector has the same size as the input one
+		if (v1.size() != l_vFullSignal.size())
+		{
+			qWarning() << "(WorkerSignalGenerator::generate) Cannot create the full vector because it is not the right size.";
+			return;
+		}
+			
+		for (std::vector<float>::iterator it = v1.begin(); it != v1.end(); ++it)
+		{
+			l_vFullSignal[std::distance(v1.begin(), it)] += *it ;
+		}
+		
+	};
+
+	for (auto l_harmonic = 0; l_harmonic < m_i32NbHarmonics; l_harmonic++)
+	{
+		elementSum(l_vHarmonicSignals[l_harmonic]);
+	}
+
 	// broadcasts the generated signals
 	emit sigBroadcastHarmonicSignals(l_vHarmonicSignals);
+	emit sigBroadcastFullSignal(l_vFullSignal);
 }
 
