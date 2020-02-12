@@ -68,7 +68,10 @@ void Application::registerMetaTypes()
 
 void Application::setWorkerConnections()
 {
-	
+	QObject::connect(m_window, SIGNAL(selectedInstrumentAndNote(int, int)), this, SLOT(setSelectedInstrumentAndNote(int, int)));
+
+
+	QObject::connect(this, SIGNAL(selectedInstrumentAndNote(int, int)), m_pWorkerSignalGenerator, SLOT(setSelectedInstrumentAndNote(int, int)));
 }
 
 void Application::moveWorkersToThread()
@@ -111,4 +114,27 @@ void Application::deleteWorkers()
 		m_pWorkerMusicPlayer = nullptr;
 	}
 		
+}
+
+void Application::setSelectedInstrumentAndNote(int instrument, int note)
+{
+	// TODO get harmonics weight values depending on the instrument
+
+	switch (note)
+	{
+	case Notes::DO :
+
+	case Notes::RE :
+
+	case Notes::MI :
+
+	case Notes::FA :
+
+	case Notes::SOL :
+	
+	case Notes::LA :
+	
+	case Notes::SI :
+
+	}
 }

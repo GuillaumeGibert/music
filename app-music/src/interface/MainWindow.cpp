@@ -11,8 +11,7 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-	m_pWFirstHarmonicSignalDisplay(nullptr), m_pWSecondHarmonicSignalDisplay(nullptr), 
-	m_pWThirdHarmonicSignalDisplay(nullptr), m_pWFourthHarmonicSignalDisplay(nullptr),
+	m_pWHarmonicSignalDisplay(nullptr),
 	m_pWFullSignalDisplay(nullptr), m_pWFullPowerSpectrumDisplay(nullptr)
 {
 	ui->setupUi(this);
@@ -33,70 +32,32 @@ MainWindow::~MainWindow()
 		}
 	};
 
-	deleteAndNullify(m_pWFirstHarmonicSignalDisplay);
-	deleteAndNullify(m_pWSecondHarmonicSignalDisplay);
-	deleteAndNullify(m_pWThirdHarmonicSignalDisplay);
-	deleteAndNullify(m_pWFourthHarmonicSignalDisplay);
+	deleteAndNullify(m_pWHarmonicSignalDisplay);
 	deleteAndNullify(m_pWFullSignalDisplay);
 	deleteAndNullify(m_pWFullPowerSpectrumDisplay);
 	
-	/*
-	if (nullptr != m_pWFirstHarmonicSignalDisplay)
-	{
-		delete m_pWFirstHarmonicSignalDisplay;
-		m_pWFirstHarmonicSignalDisplay = nullptr;
-	}
-
-	if (nullptr != m_pWSecondHarmonicSignalDisplay)
-	{
-		delete m_pWSecondHarmonicSignalDisplay;
-		m_pWSecondHarmonicSignalDisplay = nullptr;
-	}
-
-	if (nullptr != m_pWThirdHarmonicSignalDisplay)
-	{
-		delete m_pWThirdHarmonicSignalDisplay;
-		m_pWThirdHarmonicSignalDisplay = nullptr;
-	}
-
-	if (nullptr != m_pWFourthHarmonicSignalDisplay)
-	{
-		delete m_pWFourthHarmonicSignalDisplay;
-		m_pWFourthHarmonicSignalDisplay = nullptr;
-	}
-
-	if (nullptr != m_pWFullSignalDisplay)
-	{
-		delete m_pWFullSignalDisplay;
-		m_pWFullSignalDisplay = nullptr;
-	}
-
-	if (nullptr != m_pWFullPowerSpectrumDisplay)
-	{
-		delete m_pWFullPowerSpectrumDisplay;
-		m_pWFullPowerSpectrumDisplay = nullptr;
-	}
-	*/
 }
 
 void MainWindow::initWidgets()
 {
 	// 1st Harmonic Signal display
-	if (nullptr == m_pWFirstHarmonicSignalDisplay)
+	if (nullptr == m_pWHarmonicSignalDisplay)
 	{
-		m_pWFirstHarmonicSignalDisplay = new BufferedSignalDisplay();
-		m_pWFirstHarmonicSignalDisplay->setMinimumSize(600, 600);
-		m_pWFirstHarmonicSignalDisplay->setWidgetSize(QSize(640, 480));
+		m_pWHarmonicSignalDisplay = new BufferedSignalDisplay();
+		m_pWHarmonicSignalDisplay->setMinimumSize(600, 600);
+		m_pWHarmonicSignalDisplay->setWidgetSize(QSize(640, 480));
 		std::vector<std::string> vSignalLabels;
-		vSignalLabels.push_back("R"); vSignalLabels.push_back("G"); vSignalLabels.push_back("B");
-		m_pWFirstHarmonicSignalDisplay->setSignalLabels(vSignalLabels);
-		m_pWFirstHarmonicSignalDisplay->setFps(30.0);
-		m_pWFirstHarmonicSignalDisplay->setXYRange(QSize(0, 15), QSize(0, 250));
-		m_pWFirstHarmonicSignalDisplay->setLegends("Time (s)", "Color amplitude");
-		m_pWFirstHarmonicSignalDisplay->setTicks(1, 50);
-		m_pWFirstHarmonicSignalDisplay->setDrawLine(true);
+		vSignalLabels.push_back("F0"); vSignalLabels.push_back("F1"); vSignalLabels.push_back("F2"); vSignalLabels.push_back("F3");
+		vSignalLabels.push_back("F4"); vSignalLabels.push_back("F5"); vSignalLabels.push_back("F6"); vSignalLabels.push_back("F7");
+		m_pWHarmonicSignalDisplay->setSignalLabels(vSignalLabels);
+		m_pWHarmonicSignalDisplay->setFps(30.0);
+		m_pWHarmonicSignalDisplay->setXYRange(QSize(0, 15), QSize(0, 250));
+		m_pWHarmonicSignalDisplay->setLegends("Time (s)", "Signal amplitude (n.u.)");
+		m_pWHarmonicSignalDisplay->setTicks(1, 50);
+		m_pWHarmonicSignalDisplay->setDrawLine(true);
 
-		ui->vlSignal->addWidget(m_pWFullSignalDisplay);
+		ui->vlHarmonics->addWidget(m_pWHarmonicSignalDisplay);
+		
 	}
 
 	// Full Signal display
@@ -106,11 +67,11 @@ void MainWindow::initWidgets()
 		m_pWFullSignalDisplay->setMinimumSize(600, 600);
 		m_pWFullSignalDisplay->setWidgetSize(QSize(640, 480));
 		std::vector<std::string> vSignalLabels;
-		vSignalLabels.push_back("R"); vSignalLabels.push_back("G"); vSignalLabels.push_back("B");
+		vSignalLabels.push_back("Signal");
 		m_pWFullSignalDisplay->setSignalLabels(vSignalLabels);
 		m_pWFullSignalDisplay->setFps(30.0);
 		m_pWFullSignalDisplay->setXYRange(QSize(0, 15), QSize(0, 250));
-		m_pWFullSignalDisplay->setLegends("Time (s)", "Color amplitude");
+		m_pWFullSignalDisplay->setLegends("Time (s)", "Signal amplitude");
 		m_pWFullSignalDisplay->setTicks(1, 50);
 		m_pWFullSignalDisplay->setDrawLine(true);
 

@@ -17,6 +17,26 @@
 #include "workers/WorkerSignalGenerator.h"
 #include "workers/WorkerMusicPlayer.h"
 
+#define DO_FREQ 261.6
+#define RE_FREQ 293.7
+#define MI_FREQ 329.6
+#define FA_FREQ 349.2
+#define SOL_FREQ 392.0
+#define LA_FREQ 440.0
+#define SI_FREQ 493.9
+
+enum Notes
+{
+	DO,
+	RE,
+	MI,
+	FA,
+	SOL,
+	LA,
+	SI
+};
+
+
 /**
 * \class Application
 * \brief The object which represents the application and manages it.
@@ -61,7 +81,7 @@ signals:
 public slots:
 
 	// -------------------- WINDOW SLOTS --------------------	
-
+	void setSelectedInstrumentAndNote(int, int);
 	
 
 
