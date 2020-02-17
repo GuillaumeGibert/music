@@ -51,6 +51,8 @@ void WorkerSignalGenerator::setSignalFeatures(float fFps, float fDuration, float
 		m_vAmplitude = vAmplitude;
 		m_vPhase = vPhase;
 	m_oWorkerMutex.unlock();
+
+	generate();
 }
 
 

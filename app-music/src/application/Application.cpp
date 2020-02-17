@@ -68,10 +68,10 @@ void Application::registerMetaTypes()
 
 void Application::setWorkerConnections()
 {
-	QObject::connect(m_window, SIGNAL(selectedInstrumentAndNote(int, int)), this, SLOT(setSelectedInstrumentAndNote(int, int)));
+	QObject::connect(m_window, SIGNAL(sigBroadcastInstrumentAndNote(int, int)), this, SLOT(setSelectedInstrumentAndNote(int, int)));
 
 
-	QObject::connect(this, SIGNAL(selectedInstrumentAndNote(int, int)), m_pWorkerSignalGenerator, SLOT(setSelectedInstrumentAndNote(int, int)));
+	QObject::connect(this, SIGNAL(sigBroadcastSignalFeatures(float fFps, float fDuration, float fFrequency, int nbHarmonics, std::vector<float> vAmplitude, std::vector<float> vPhase)), m_pWorkerSignalGenerator, SLOT(setSignalFeatures(float fFps, float fDuration, float fFrequency, int nbHarmonics, std::vector<float> vAmplitude, std::vector<float> vPhase);));
 }
 
 void Application::moveWorkersToThread()
@@ -120,21 +120,39 @@ void Application::setSelectedInstrumentAndNote(int instrument, int note)
 {
 	// TODO get harmonics weight values depending on the instrument
 
+	float fFps = 44100.0;
+	float fDuration = 2.0;
+	int nbHarmonics = 1;
+	std::vector<float> vAmplitude = { 1.0 };
+	std::vector<float> vPhase = { 0.0 };
+
+	float fFrequency = 0.0;
+	
 	switch (note)
 	{
 	case Notes::DO :
-
+		fFrequency = DO_FREQ;
+		break;
 	case Notes::RE :
-
+		fFrequency = RE_FREQ;
+		break;
 	case Notes::MI :
-
+		fFrequency = MI_FREQ;
+		break;
 	case Notes::FA :
-
+		fFrequency = FA_FREQ;
+		break;
 	case Notes::SOL :
-	
+		fFrequency = SOL_FREQ;
+		break;
 	case Notes::LA :
-	
+		fFrequency = LA_FREQ;
+		break;
 	case Notes::SI :
-
+		fFrequency = SI_FREQ;
+		break;
 	}
+
+	
+	emit sigBroadcastSignalFeatures(fFps, fDuration, fFrequency, nbHarmonics, vAmplitude, vPhase);
 }

@@ -12,6 +12,7 @@
 #include <QMainWindow>
 #include <QMessagebox.h>
 #include <QFileDialog>
+#include <QSignalMapper>
 
 #include "BufferedSignalDisplay.h"
 
@@ -45,13 +46,15 @@ public:
 	
 
 public slots:
-		
+	void setNoteIndex(int note);
+	void setInstrumentIndex(int i32InstrumentIndex);
 
 signals:
-	void selectedInstrumentAndNote(int, int);
+	void sigBroadcastInstrumentAndNote(int, int);
 	
 private:
 	void initWidgets();
+	void setInterfaceConnections();
 	
 private:
 	Ui::MainWindow *ui;									// Also Qt stuff
@@ -59,6 +62,12 @@ private:
 	BufferedSignalDisplay* m_pWHarmonicSignalDisplay;
 	BufferedSignalDisplay* m_pWFullSignalDisplay;
 	BufferedSignalDisplay* m_pWFullPowerSpectrumDisplay;
+
+	int m_i32InstrumentIndex;
+	int m_i32NoteIndex;
+
+	QSignalMapper* m_pNoteMapper;
+	QSignalMapper* m_pInstrumentMapper;
 };
 
 #endif // MAINWINDOW_H

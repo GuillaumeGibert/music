@@ -75,7 +75,7 @@ private:
 signals:
 	
 	// -------------------- SIGNALS FOR THE WINDOW --------------------
-
+	void sigBroadcastSignalFeatures(float fFps, float fDuration, float fFrequency, int nbHarmonics, std::vector<float> vAmplitude, std::vector<float> vPhase);
 	
 
 public slots:
