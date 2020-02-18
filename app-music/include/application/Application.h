@@ -17,7 +17,8 @@
 #include "workers/WorkerSignalGenerator.h"
 #include "workers/WorkerMusicPlayer.h"
 
-#define DO_FREQ 261.6
+//#define DO_FREQ 261.6
+#define DO_FREQ 20.0
 #define RE_FREQ 293.7
 #define MI_FREQ 329.6
 #define FA_FREQ 349.2

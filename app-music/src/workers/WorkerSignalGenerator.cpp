@@ -103,6 +103,13 @@ void WorkerSignalGenerator::generate()
 	// creates a vector to store the generated signals
 	std::vector<std::vector<float>> l_vHarmonicSignals;
 
+	// generates the time vector corresponding to the sample
+	std::vector<float> l_vTimestamp;
+	for (auto l_sample = 0; l_sample < m_fFps * m_fDuration; l_sample++)
+		l_vTimestamp.push_back(l_sample/ m_fFps);
+
+	l_vHarmonicSignals.push_back(l_vTimestamp);
+
 	// sets the general features (fps and duration)
 	m_pSineGenerator->setFps(m_fFps);
 	m_pSineGenerator->setDuration(m_fDuration);
@@ -118,7 +125,13 @@ void WorkerSignalGenerator::generate()
 		l_vHarmonicSignals.push_back(m_pSineGenerator->generate());
 	}
 
-	std::vector<float> l_vFullSignal(static_cast<int>(m_fFps* m_fDuration), 0.0);
+
+	// creates a vector to store the full signal (i.e. timestamp + (fundamental + harmonics))
+	std::vector<std::vector<float>> l_vFullSignals;
+	l_vFullSignals.push_back(l_vTimestamp);
+
+	// creates a vector to store the full signal (i.e. (fundamental + harmonics))
+	std::vector<float> l_vFullSignal(static_cast<int>(m_fFps * m_fDuration), 0.0);
 	
 	auto elementSum = [&l_vFullSignal](std::vector<float>& v1) -> void
 	{
@@ -136,13 +149,16 @@ void WorkerSignalGenerator::generate()
 		
 	};
 
-	for (auto l_harmonic = 0; l_harmonic < m_i32NbHarmonics; l_harmonic++)
+	for (auto l_harmonic = 1; l_harmonic < m_i32NbHarmonics+1; l_harmonic++)
 	{
 		elementSum(l_vHarmonicSignals[l_harmonic]);
 	}
 
+	l_vFullSignals.push_back(l_vFullSignal);
+
 	// broadcasts the generated signals
 	emit sigBroadcastHarmonicSignals(l_vHarmonicSignals);
+	emit sigBroadcastFullSignals(l_vFullSignals);
 	emit sigBroadcastFullSignal(l_vFullSignal);
 }
 

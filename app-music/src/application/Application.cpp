@@ -16,18 +16,6 @@ Application::Application()
 
 Application::~Application()
 {
-	if (nullptr != m_pWorkerSignalGenerator)
-	{
-		delete m_pWorkerSignalGenerator;
-		m_pWorkerSignalGenerator = nullptr;
-	}
-	
-	if (nullptr != m_pWorkerMusicPlayer)
-	{
-		delete m_pWorkerMusicPlayer;
-		m_pWorkerMusicPlayer = nullptr;
-	}
-
 	// stops the threads
 	stopWorkerThreads();
 
@@ -55,23 +43,31 @@ void Application::initWorkers()
 
 	if (nullptr == m_pWorkerMusicPlayer)
 	{
-		m_pWorkerMusicPlayer = new WorkerMusicPlayer();
+		m_pWorkerMusicPlayer = new WorkerMusicPlayer(8000.0, 1.0);
 	}
 }
 
 void Application::registerMetaTypes()
 {
 	// register opencv data types
-	qRegisterMetaType< std::vector<float> >("std::vector<float>");
-	qRegisterMetaType< std::vector< std::deque<float> > >("std::vector<std::deque<float>>");
+	qRegisterMetaType< std::vector<std::vector<float>> >("std::vector<std::vector<float>>");
 }
 
 void Application::setWorkerConnections()
 {
+	// Selection on the interface generates new signals
 	QObject::connect(m_window, SIGNAL(sigBroadcastInstrumentAndNote(int, int)), this, SLOT(setSelectedInstrumentAndNote(int, int)));
+	QObject::connect(this, SIGNAL(sigBroadcastSignalFeatures(float, float, float, int, std::vector<float>, std::vector<float>)), m_pWorkerSignalGenerator, SLOT(setSignalFeatures(float, float, float, int, std::vector<float>, std::vector<float>)));
+	
+	// Generated signals are then transmitted to the interface for display
+	QObject::connect(m_pWorkerSignalGenerator, SIGNAL(sigBroadcastHarmonicSignals(std::vector<std::vector<float>>)), m_window, SLOT(setHarmonicSignals(std::vector<std::vector<float>>)));
+	QObject::connect(m_pWorkerSignalGenerator, SIGNAL(sigBroadcastFullSignals(std::vector<std::vector<float>>)), m_window, SLOT(setFullSignals(std::vector<std::vector<float>>)));
+	// and to the music player
+	QObject::connect(m_pWorkerSignalGenerator, SIGNAL(sigBroadcastFullSignal(std::vector<float>)), m_pWorkerMusicPlayer, SLOT(setSignalValues(std::vector<float>)));
 
-
-	QObject::connect(this, SIGNAL(sigBroadcastSignalFeatures(float fFps, float fDuration, float fFrequency, int nbHarmonics, std::vector<float> vAmplitude, std::vector<float> vPhase)), m_pWorkerSignalGenerator, SLOT(setSignalFeatures(float fFps, float fDuration, float fFrequency, int nbHarmonics, std::vector<float> vAmplitude, std::vector<float> vPhase);));
+	// Click on the Play button launches the music
+	QObject::connect(m_window, SIGNAL(play()), m_pWorkerMusicPlayer, SLOT(play())); 
+	
 }
 
 void Application::moveWorkersToThread()
@@ -113,18 +109,18 @@ void Application::deleteWorkers()
 		delete m_pWorkerMusicPlayer;
 		m_pWorkerMusicPlayer = nullptr;
 	}
-		
+	
 }
 
 void Application::setSelectedInstrumentAndNote(int instrument, int note)
 {
 	// TODO get harmonics weight values depending on the instrument
 
-	float fFps = 44100.0;
-	float fDuration = 2.0;
-	int nbHarmonics = 1;
-	std::vector<float> vAmplitude = { 1.0 };
-	std::vector<float> vPhase = { 0.0 };
+	float fFps = 8000.0;
+	float fDuration = 1.0;
+	int nbHarmonics = 2;
+	std::vector<float> vAmplitude = { 1.0, 0.5 };
+	std::vector<float> vPhase = { 0.0, 0.0};
 
 	float fFrequency = 0.0;
 	

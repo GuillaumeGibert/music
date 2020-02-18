@@ -20,15 +20,18 @@ WorkerMusicPlayer::WorkerMusicPlayer(float fSampleRate, float fDuration)
     m_pByteBuffer = nullptr;
 
     m_bIsWorkerInitialized = false;
+
+    init();
 }
 
 WorkerMusicPlayer::~WorkerMusicPlayer()
 {
+    /*m_pAudioOutput->stop();
     if (nullptr != m_pAudioOutput)
     {
         delete m_pAudioOutput;
         m_pAudioOutput = nullptr;
-    }
+    }*/
 
     if (nullptr != m_pByteBuffer)
     {
@@ -81,6 +84,8 @@ bool WorkerMusicPlayer::init()
     if (nullptr == m_pAudioOutput)
         m_pAudioOutput = new QAudioOutput(m_oAudioFormat, this);
 
+    m_pAudioOutput->setVolume(1.0);
+
     m_pByteBuffer = new QByteArray();  // create a new instance of QByteArray class (in the heap, dynamically arranged in memory), and set its pointer to byteBuffer
 
     return m_bIsWorkerInitialized;
@@ -109,6 +114,7 @@ void WorkerMusicPlayer::setDuration(float fDuration)
     m_oWorkerMutex.unlock();
 }
 
+/*
 void WorkerMusicPlayer::play()
 {
     // --- transfer QVector data to QByteBuffer
@@ -117,7 +123,11 @@ void WorkerMusicPlayer::play()
     for (std::vector<float>::iterator it = m_vSignalValues.begin(); it != m_vSignalValues.end(); ++it)
     {
         // breaks down one float into four bytes
-        char* ptr = (char*)(&(*it));  // assign a char* pointer to the address of this data sample
+        //float sample = (float)sinVal;  // save one data sample in a local variable, so I can break it down into four bytes
+        //char* ptr = (char*)(&sample);  // assign a char* pointer to the address of this data sample
+
+        float sample = *it;
+        char* ptr = (char*)(&sample);  // assign a char* pointer to the address of this data sample
         char byte00 = *ptr;         // 1st byte
         char byte01 = *(ptr + 1);   // 2nd byte
         char byte02 = *(ptr + 2);   // 3rd byte
@@ -148,14 +158,15 @@ void WorkerMusicPlayer::play()
 
     // start the audio (i.e., play sound from the QAudioOutput object that we just created)
     m_pAudioOutput->start(input);
+    
 }
+*/
 
 
-/*
 void WorkerMusicPlayer::play()
 {
     // initialize parameters
-    qreal sampleRate = 40000;   // sample rate
+    qreal sampleRate = 8000;   // sample rate
     qreal duration = 1.000;     // duration in seconds
     qreal frequency = 1000;     // frequency
     const quint32 n = static_cast<quint32>(duration * sampleRate);   // number of data samples
@@ -167,8 +178,8 @@ void WorkerMusicPlayer::play()
    
     for (quint32 i = 0; i < n; i++)
     {
-        qreal sinVal;
-        //qreal sinVal = (qreal)qSin(2.0 * M_PI * frequency * i / sampleRate);  // create sine wave data samples, one at a time
+        //qreal sinVal;
+        qreal sinVal = (qreal)sin(2.0 * 3.14 * frequency * i / sampleRate);  // create sine wave data samples, one at a time
 
         // break down one float into four bytes
         float sample = (float)sinVal;  // save one data sample in a local variable, so I can break it down into four bytes
@@ -186,24 +197,24 @@ void WorkerMusicPlayer::play()
     }
 
     // create and setup a QAudioFormat object
-   /* QAudioFormat audioFormat;
+   QAudioFormat audioFormat;
     audioFormat.setSampleRate(static_cast<int>(sampleRate));
     audioFormat.setChannelCount(1);
     audioFormat.setSampleSize(32);   // set the sample size in bits. We set it to 32 bis, because we set SampleType to float (one float has 4 bytes ==> 32 bits)
     audioFormat.setCodec("audio/pcm");
     audioFormat.setByteOrder(QAudioFormat::LittleEndian);
     audioFormat.setSampleType(QAudioFormat::Float);   // use Float, to have a better resolution than SignedInt or UnSignedInt
-    */
+    
     // create a QAudioDeviceInfo object, to make sure that our audioFormat is supported by the device
-  /*  QAudioDeviceInfo deviceInfo(QAudioDeviceInfo::defaultOutputDevice());
+  QAudioDeviceInfo deviceInfo(QAudioDeviceInfo::defaultOutputDevice());
     if (!deviceInfo.isFormatSupported(audioFormat))
     {
         qWarning() << "Raw audio format not supported by backend, cannot play audio.";
         return;
     }
-    */
+   
     // Make a QBuffer with our QByteArray
-   /* QBuffer* input = new QBuffer(byteBuffer);
+    QBuffer* input = new QBuffer(byteBuffer);
     input->open(QIODevice::ReadOnly);   // set the QIODevice to read-only
 
     // Create an audio output with our QAudioFormat
@@ -225,5 +236,5 @@ void WorkerMusicPlayer::play()
     // start the audio (i.e., play sound from the QAudioOutput object that we just created)
     audio->start(input);
 }
-*/
+
 

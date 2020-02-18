@@ -10,7 +10,7 @@ BufferedSignalDisplay::BufferedSignalDisplay()
 BufferedSignalDisplay::~BufferedSignalDisplay()
 {}
 
-void BufferedSignalDisplay::setNewValues(std::vector<std::deque<float>> aFCurvesValues)
+void BufferedSignalDisplay::setNewValues(std::vector<std::vector<float>> aFCurvesValues)
 {
     if (!m_bInitialization)
         checkSettings();
@@ -162,7 +162,7 @@ void BufferedSignalDisplay::paintEvent(QPaintEvent *)
                 std::vector<QPoint> l_aP3fCurvePoints;
 
                 uint jj = 0;
-                for (std::deque<float>::iterator it = m_vSignalValues[ii].begin(); it != m_vSignalValues[ii].end(); ++it, ++jj)
+                for (std::vector<float>::iterator it = m_vSignalValues[ii].begin(); it != m_vSignalValues[ii].end(); ++it, ++jj)
                 {
                     float l_fVal = (*it);
 

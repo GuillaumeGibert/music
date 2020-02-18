@@ -5,7 +5,7 @@
 #include <QPainter>
 #include <iostream>
 #include <sstream>
-#include <deque>
+
 
 class SignalDisplay : public QWidget
 {

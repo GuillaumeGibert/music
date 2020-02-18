@@ -17,11 +17,12 @@ protected:
 	bool init();
 
 public slots:
-	void setSignalFeatures(float fFps, float fDuration, float fFrequency, int nbHarmonics, std::vector<float> vAmplitude, std::vector<float> vPhase);
+	void setSignalFeatures(float, float, float, int, std::vector<float>, std::vector<float>);
 	void generate();
 
 signals:
 	void sigBroadcastHarmonicSignals(std::vector<std::vector<float>>);
+	void sigBroadcastFullSignals(std::vector<std::vector<float>>);
 	void sigBroadcastFullSignal(std::vector<float>);
 
 private:

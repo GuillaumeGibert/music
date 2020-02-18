@@ -48,9 +48,12 @@ public:
 public slots:
 	void setNoteIndex(int note);
 	void setInstrumentIndex(int i32InstrumentIndex);
+	void setHarmonicSignals(std::vector<std::vector<float>>);
+	void setFullSignals(std::vector<std::vector<float>>);
 
 signals:
 	void sigBroadcastInstrumentAndNote(int, int);
+	void play();
 	
 private:
 	void initWidgets();
