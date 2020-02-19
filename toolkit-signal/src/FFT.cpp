@@ -23,12 +23,12 @@ void FFT::setFps(float fFps)
     m_fFps = fFps;
 }
 
-void FFT::setBufferedSignalValues(std::vector<std::deque<float>> vBufferedSignalValues)
+void FFT::setBufferedSignalValues(std::vector<std::vector<float>> vBufferedSignalValues)
 {
-    std::vector<std::deque<float>> l_vPowerSpectrumValues;
+    std::vector<std::vector<float>> l_vPowerSpectrumValues;
 
-    // creates the x-axis deque
-    std::deque<float> l_dSpectrumFrequency;
+    // creates the x-axis vector
+    std::vector<float> l_dSpectrumFrequency;
     unsigned long l_i64NbFrequencies = findUpperPowerOfTwo(vBufferedSignalValues[0].size());
 
     for (int l_freq = 0; l_freq < l_i64NbFrequencies; l_freq++)
@@ -57,7 +57,7 @@ void FFT::setBufferedSignalValues(std::vector<std::deque<float>> vBufferedSignal
         std::vector<float> l_vFFTPhaseSpectrum;
         phaseSpectrum(l_vFFTRealPart, l_vFFTImagPart, l_vFFTPhaseSpectrum);
 
-        std::deque<float> l_dPowerSpectrum = {l_vFFTPowerSpectrum.begin(), l_vFFTPowerSpectrum.end()};
+        std::vector<float> l_dPowerSpectrum = {l_vFFTPowerSpectrum.begin(), l_vFFTPowerSpectrum.end()};
         l_vPowerSpectrumValues.push_back(l_dPowerSpectrum);
     }
 

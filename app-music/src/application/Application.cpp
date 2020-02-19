@@ -11,6 +11,7 @@ Application::Application()
 {
 	m_pWorkerSignalGenerator = nullptr;
 	m_pWorkerMusicPlayer = nullptr;
+	m_pWorkerFFT = nullptr;
 }
 
 
@@ -45,6 +46,11 @@ void Application::initWorkers()
 	{
 		m_pWorkerMusicPlayer = new WorkerMusicPlayer(8000.0, 1.0);
 	}
+
+	if (nullptr == m_pWorkerFFT)
+	{
+		m_pWorkerFFT = new WorkerFFT();
+	}
 }
 
 void Application::registerMetaTypes()
@@ -64,9 +70,11 @@ void Application::setWorkerConnections()
 	QObject::connect(m_pWorkerSignalGenerator, SIGNAL(sigBroadcastFullSignals(std::vector<std::vector<float>>)), m_window, SLOT(setFullSignals(std::vector<std::vector<float>>)));
 	// and to the music player
 	QObject::connect(m_pWorkerSignalGenerator, SIGNAL(sigBroadcastFullSignal(std::vector<float>)), m_pWorkerMusicPlayer, SLOT(setSignalValues(std::vector<float>)));
+	// and to the FFT
+	QObject::connect(m_pWorkerSignalGenerator, SIGNAL(sigBroadcastFullSignals(std::vector<std::vector<float>>)), m_pWorkerFFT, SLOT(setSignalValues(std::vector<std::vector<float>>)));
+	QObject::connect(m_pWorkerFFT, SIGNAL(sigBroadcastPowerSpectrumValues(std::vector<std::vector<float>>)), m_window, SLOT(setFullSignals(std::vector<std::vector<float>>)));
+	
 
-	// Click on the Play button launches the music
-	QObject::connect(m_window, SIGNAL(play()), m_pWorkerMusicPlayer, SLOT(play())); 
 	
 }
 
@@ -85,6 +93,13 @@ void Application::moveWorkersToThread()
 		m_pWorkerMusicPlayer->moveToThread(&m_TWorkerMusicPlayer);
 		m_TWorkerMusicPlayer.start();
 	}
+
+	// WorkerFFT
+	if (nullptr != m_pWorkerFFT)
+	{
+		m_pWorkerFFT->moveToThread(&m_TWorkerFFT);
+		m_TWorkerFFT.start();
+	}
 }
 
 void Application::stopWorkerThreads()
@@ -94,6 +109,9 @@ void Application::stopWorkerThreads()
 
 	m_TWorkerMusicPlayer.quit();
 	m_TWorkerMusicPlayer.wait();
+
+	m_TWorkerFFT.quit();
+	m_TWorkerFFT.wait();
 }
 
 void Application::deleteWorkers()
@@ -109,6 +127,12 @@ void Application::deleteWorkers()
 		delete m_pWorkerMusicPlayer;
 		m_pWorkerMusicPlayer = nullptr;
 	}
+
+	if (nullptr != m_pWorkerFFT)
+	{
+		delete m_pWorkerFFT;
+		m_pWorkerFFT = nullptr;
+	}
 	
 }
 
@@ -118,9 +142,9 @@ void Application::setSelectedInstrumentAndNote(int instrument, int note)
 
 	float fFps = 8000.0;
 	float fDuration = 1.0;
-	int nbHarmonics = 2;
-	std::vector<float> vAmplitude = { 1.0, 0.5 };
-	std::vector<float> vPhase = { 0.0, 0.0};
+	int nbHarmonics = 5;
+	std::vector<float> vAmplitude = { 0.8, 0.5, 0.3, 0.2, 0.1 };
+	std::vector<float> vPhase = { 0.0, 0.0, 0.0, 0.0 , 0.0};
 
 	float fFrequency = 0.0;
 	

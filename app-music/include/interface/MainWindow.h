@@ -50,6 +50,7 @@ public slots:
 	void setInstrumentIndex(int i32InstrumentIndex);
 	void setHarmonicSignals(std::vector<std::vector<float>>);
 	void setFullSignals(std::vector<std::vector<float>>);
+	void setPowerSpectrum(std::vector<std::vector<float>>);
 
 signals:
 	void sigBroadcastInstrumentAndNote(int, int);

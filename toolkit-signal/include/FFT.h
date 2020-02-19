@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QDebug>
 
-#include <deque>
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -23,10 +22,10 @@ public:
     void setFps(float);
 
 public slots:
-    void setBufferedSignalValues(std::vector<std::deque<float>> vBufferedSignalValues);
+    void setBufferedSignalValues(std::vector<std::vector<float>> vBufferedSignalValues);
 
 signals:
-    void sigBroadcastPowerSpectrumValues(std::vector<std::deque<float>>);
+    void sigBroadcastPowerSpectrumValues(std::vector<std::vector<float>>);
 
 private:
     void compute(std::vector<float> &vInputSignal, std::vector<float> &vFFTRealPart, std::vector<float> &vFFTImagPart);
