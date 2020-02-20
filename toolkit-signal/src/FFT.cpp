@@ -25,7 +25,8 @@ void FFT::setFps(float fFps)
 
 void FFT::setBufferedSignalValues(std::vector<std::vector<float>> vBufferedSignalValues)
 {
-    std::vector<std::vector<float>> l_vPowerSpectrumValues;
+    //std::vector<std::vector<float>> l_vPowerSpectrumValues;
+    m_vPowerSpectrumValues.clear();
 
     // creates the x-axis vector
     std::vector<float> l_dSpectrumFrequency;
@@ -35,7 +36,7 @@ void FFT::setBufferedSignalValues(std::vector<std::vector<float>> vBufferedSigna
     {
         l_dSpectrumFrequency.push_back((float)l_freq * m_fFps / l_i64NbFrequencies);
     }
-    l_vPowerSpectrumValues.push_back(l_dSpectrumFrequency);
+    m_vPowerSpectrumValues.push_back(l_dSpectrumFrequency);
 
 
     for (auto l_signal = 0; l_signal < m_i32NbSignals; l_signal++)
@@ -58,10 +59,12 @@ void FFT::setBufferedSignalValues(std::vector<std::vector<float>> vBufferedSigna
         phaseSpectrum(l_vFFTRealPart, l_vFFTImagPart, l_vFFTPhaseSpectrum);
 
         std::vector<float> l_dPowerSpectrum = {l_vFFTPowerSpectrum.begin(), l_vFFTPowerSpectrum.end()};
-        l_vPowerSpectrumValues.push_back(l_dPowerSpectrum);
+        m_vPowerSpectrumValues.push_back(l_dPowerSpectrum);
     }
 
-    emit sigBroadcastPowerSpectrumValues(l_vPowerSpectrumValues);
+    //m_vPowerSpectrumValues = l_vPowerSpectrumValues;
+
+    //emit sigBroadcastPowerSpectrumValues(m_vPowerSpectrumValues);
 }
 
 void FFT::pad(std::vector<float> &vInputSignal, std::vector<float> &vPaddedSignal)
@@ -238,4 +241,7 @@ void FFT::hannWindow(std::vector<float>& inSignal, std::vector<float>& outSignal
     }
 }
 
-
+std::vector<std::vector<float>> FFT::getPowerSpectrumValues()
+{
+    return m_vPowerSpectrumValues;
+}

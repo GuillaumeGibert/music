@@ -26,8 +26,10 @@ bool WorkerFFT::init()
 	if (nullptr == m_pFFT)
 	{
 		m_pFFT = new FFT();
-		QObject::connect(m_pFFT, SIGNAL(sigBroadcastPowerSpectrumValues(std::vector<std::vector<float>>)), this, SIGNAL(sigBroadcastPowerSpectrumValues(std::vector<std::vector<float>>)));
+		m_pFFT->setNbSignals(1);
+		m_pFFT->setFps(8000);
 
+		
 		m_bIsWorkerInitialized = true;
 	}
 
@@ -54,5 +56,8 @@ void WorkerFFT::setSignalValues(std::vector<std::vector<float>> vSignalValues)
 {
 	m_oWorkerMutex.lockForWrite();
 		m_pFFT->setBufferedSignalValues(vSignalValues);
+		std::vector<std::vector<float>> l_vPowerSpectrumValues = m_pFFT->getPowerSpectrumValues();
+		emit sigBroadcastPowerSpectrumValues(l_vPowerSpectrumValues);
 	m_oWorkerMutex.unlock();
 }
+

@@ -20,6 +20,7 @@ public:
 public:
     void setNbSignals(int);
     void setFps(float);
+    std::vector<std::vector<float>> getPowerSpectrumValues();
 
 public slots:
     void setBufferedSignalValues(std::vector<std::vector<float>> vBufferedSignalValues);
@@ -45,6 +46,8 @@ private:
 
     int m_i32NbSignals;
     float m_fFps;
+
+    std::vector<std::vector<float>> m_vPowerSpectrumValues;
 
 };
 

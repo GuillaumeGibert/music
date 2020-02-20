@@ -72,7 +72,7 @@ void Application::setWorkerConnections()
 	QObject::connect(m_pWorkerSignalGenerator, SIGNAL(sigBroadcastFullSignal(std::vector<float>)), m_pWorkerMusicPlayer, SLOT(setSignalValues(std::vector<float>)));
 	// and to the FFT
 	QObject::connect(m_pWorkerSignalGenerator, SIGNAL(sigBroadcastFullSignals(std::vector<std::vector<float>>)), m_pWorkerFFT, SLOT(setSignalValues(std::vector<std::vector<float>>)));
-	QObject::connect(m_pWorkerFFT, SIGNAL(sigBroadcastPowerSpectrumValues(std::vector<std::vector<float>>)), m_window, SLOT(setFullSignals(std::vector<std::vector<float>>)));
+	QObject::connect(m_pWorkerFFT, SIGNAL(sigBroadcastPowerSpectrumValues(std::vector<std::vector<float>>)), m_window, SLOT(setPowerSpectrum(std::vector<std::vector<float>>)));
 	
 
 	

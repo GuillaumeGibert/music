@@ -66,6 +66,24 @@ void MainWindow::initWidgets()
 		
 	}
 
+	// Full Power Spectrum display
+	if (nullptr == m_pWFullPowerSpectrumDisplay)
+	{
+		m_pWFullPowerSpectrumDisplay = new BufferedSignalDisplay();
+		m_pWFullPowerSpectrumDisplay->setMinimumSize(600, 600);
+		m_pWFullPowerSpectrumDisplay->setWidgetSize(QSize(640, 480));
+		std::vector<std::string> vSignalLabels;
+		vSignalLabels.push_back("Signal");
+		m_pWFullPowerSpectrumDisplay->setSignalLabels(vSignalLabels);
+		m_pWFullPowerSpectrumDisplay->setFps(8000.0);
+		m_pWFullPowerSpectrumDisplay->setXYRange(QSize(0, 4000), QSize(0, 100));
+		m_pWFullPowerSpectrumDisplay->setLegends("Frequency (Hz)", "Power spectrum");
+		m_pWFullPowerSpectrumDisplay->setTicks(5, 500);
+		m_pWFullPowerSpectrumDisplay->setDrawLine(true);
+
+		ui->vlSignal->addWidget(m_pWFullPowerSpectrumDisplay);
+	}
+
 	// Full Signal display
 	if (nullptr == m_pWFullSignalDisplay)
 	{
@@ -84,23 +102,7 @@ void MainWindow::initWidgets()
 		ui->vlSignal->addWidget(m_pWFullSignalDisplay);
 	}
 
-	// Full Power Spectrum display
-	if (nullptr == m_pWFullPowerSpectrumDisplay)
-	{
-		m_pWFullPowerSpectrumDisplay = new BufferedSignalDisplay();
-		m_pWFullPowerSpectrumDisplay->setMinimumSize(600, 600);
-		m_pWFullPowerSpectrumDisplay->setWidgetSize(QSize(640, 480));
-		std::vector<std::string> vSignalLabels;
-		vSignalLabels.push_back("Signal"); 
-		m_pWFullPowerSpectrumDisplay->setSignalLabels(vSignalLabels);
-		m_pWFullPowerSpectrumDisplay->setFps(8000.0);
-		m_pWFullPowerSpectrumDisplay->setXYRange(QSize(0, 4000), QSize(0, 10));
-		m_pWFullPowerSpectrumDisplay->setLegends("Frequency (Hz)", "Power spectrum");
-		m_pWFullPowerSpectrumDisplay->setTicks(5, 500);
-		m_pWFullPowerSpectrumDisplay->setDrawLine(true);
-
-		ui->vlSignal->addWidget(m_pWFullPowerSpectrumDisplay);
-	}
+	
 }
 
 void MainWindow::setInterfaceConnections()
