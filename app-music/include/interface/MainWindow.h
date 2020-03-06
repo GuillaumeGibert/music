@@ -10,7 +10,7 @@
 
 // Qt
 #include <QMainWindow>
-#include <QMessagebox.h>
+#include <QMessageBox>
 #include <QFileDialog>
 #include <QSignalMapper>
 

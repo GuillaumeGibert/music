@@ -6,7 +6,7 @@
 #include <QBuffer>
 #include <QAudioOutput>
 
-#include "workers\Worker.h"
+#include "workers/Worker.h"
 
 class WorkerMusicPlayer : public Worker
 {

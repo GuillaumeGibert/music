@@ -1,7 +1,7 @@
 #ifndef _WORKER_SIGNAL_GENERATOR_H
 #define _WORKER_SIGNAL_GENERATOR_H
 
-#include "workers\Worker.h"
+#include "workers/Worker.h"
 #include "SineGenerator.h"
 
 class WorkerSignalGenerator : public Worker

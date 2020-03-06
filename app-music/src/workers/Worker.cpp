@@ -1,4 +1,4 @@
-#include "workers\Worker.h"
+#include "workers/Worker.h"
 
 // CONSTRUCTOR
 Worker::Worker(): 

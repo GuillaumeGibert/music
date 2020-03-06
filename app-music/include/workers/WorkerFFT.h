@@ -1,7 +1,7 @@
 #ifndef _WORKER_FFT_H
 #define _WORKER_FFT_H
 
-#include "workers\Worker.h"
+#include "workers/Worker.h"
 #include "FFT.h"
 
 class WorkerFFT : public Worker

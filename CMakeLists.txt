@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 
 #####CMAKE#####
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MDd")
 set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/../dist" CACHE FILEPATH "path to dist directory")
@@ -49,7 +51,7 @@ project(music)
 #####AUTO######
 
 #QT
-set(CMAKE_PREFIX_PATH "C:/Qt/5.12.4/msvc2015_64"  CACHE FILEPATH "path to qt5 vs2015 directory")
+set(CMAKE_PREFIX_PATH "/home/guillaume/software/Qt/5.14.1/gcc_64"  CACHE FILEPATH "path to qt5 vs2015 directory")
 find_package(Qt5Widgets)
 find_package(Qt5Gui)
 find_package(Qt5Core)
