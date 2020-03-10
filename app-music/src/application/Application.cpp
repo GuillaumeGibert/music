@@ -116,25 +116,20 @@ void Application::stopWorkerThreads()
 
 void Application::deleteWorkers()
 {
-	if (nullptr != m_pWorkerSignalGenerator)
-	{
-		delete m_pWorkerSignalGenerator;
-		m_pWorkerSignalGenerator = nullptr;
-	}
+    auto deleteAndNullify = [](auto pointer) -> void
+    {
+        if (nullptr != pointer)
+        {
+            delete pointer;
+            pointer = nullptr;
+        }
+    };
 
-	if (nullptr != m_pWorkerMusicPlayer)
-	{
-		delete m_pWorkerMusicPlayer;
-		m_pWorkerMusicPlayer = nullptr;
-	}
+    deleteAndNullify(m_pWorkerSignalGenerator);
+    deleteAndNullify(m_pWorkerMusicPlayer);
+    deleteAndNullify(m_pWorkerFFT);
 
-	if (nullptr != m_pWorkerFFT)
-	{
-		delete m_pWorkerFFT;
-		m_pWorkerFFT = nullptr;
-	}
-	
-}
+ }
 
 void Application::setSelectedInstrumentAndNote(int instrument, int note)
 {
