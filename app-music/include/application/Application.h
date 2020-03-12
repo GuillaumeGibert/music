@@ -18,8 +18,7 @@
 #include "workers/WorkerMusicPlayer.h"
 #include "workers/WorkerFFT.h"
 
-//#define DO_FREQ 261.6
-#define DO_FREQ 261.0
+#define DO_FREQ 261.6
 #define RE_FREQ 293.7
 #define MI_FREQ 329.6
 #define FA_FREQ 349.2
@@ -67,7 +66,7 @@ public:
 
 private:
 	void registerMetaTypes();
-
+	bool loadConfigFile(QString sConfigFilename);
 	void initWorkers();
 	void setWorkerConnections();
 	void moveWorkersToThread();
@@ -100,6 +99,17 @@ private:
 
 	WorkerFFT* m_pWorkerFFT;
 	QThread m_TWorkerFFT;
+
+	bool m_bIsConfigFileLoaded;
+	int m_i32NbHarmonics;
+	float m_fDuration;
+	float m_fSamplingRate;
+	std::vector<float> m_vDefaultHarmonicsAmplitudes;
+	std::vector<float> m_vDefaultHarmonicsPhases;
+	std::vector<float> m_vInvFrequencyHarmonicsAmplitudes;
+	std::vector<float> m_vInvFrequencyHarmonicsPhases;
+	std::vector<float> m_vOboeHarmonicsAmplitudes;
+	std::vector<float> m_vOboeHarmonicsPhases;
 };
 
 #endif

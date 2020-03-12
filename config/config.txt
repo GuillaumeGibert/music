@@ -1,0 +1,9 @@
+nbHarmonics: 5
+duration: 2.0
+samplingRate: 4000.0
+defaultHarmonicsAmplitudes: 1.0 0.0 0.0 0.0 0.0
+defaultHarmonicsPhases: 0.0 0.0 0.0 0.0 0.0
+invFrequencyHarmonicsAmplitudes: 1.0 0.5 0.33 0.25 0.20
+invFrequencyHarmonicsPhases: 0.0 0.0 0.0 0.0 0.0
+oboeHarmonicsAmplitudes: 1.0 0.0 0.0 0.0 0.0
+oboeHarmonicsPhases: 0.0 0.0 0.0 0.0 0.0

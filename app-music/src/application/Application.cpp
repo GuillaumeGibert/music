@@ -12,6 +12,12 @@ Application::Application()
 	m_pWorkerSignalGenerator = nullptr;
 	m_pWorkerMusicPlayer = nullptr;
 	m_pWorkerFFT = nullptr;
+	m_bIsConfigFileLoaded = false;
+	m_i32NbHarmonics = 0;
+	m_fDuration = 1.0f;
+	m_fSamplingRate = 8000.0;
+
+	loadConfigFile("config.txt");
 }
 
 
@@ -44,7 +50,7 @@ void Application::initWorkers()
 
 	if (nullptr == m_pWorkerMusicPlayer)
 	{
-		m_pWorkerMusicPlayer = new WorkerMusicPlayer(8000.0, 1.0);
+		m_pWorkerMusicPlayer = new WorkerMusicPlayer(m_fSamplingRate, m_fDuration);
 	}
 
 	if (nullptr == m_pWorkerFFT)
@@ -55,8 +61,72 @@ void Application::initWorkers()
 
 void Application::registerMetaTypes()
 {
-	// register opencv data types
+	// register data types
 	qRegisterMetaType< std::vector<std::vector<float>> >("std::vector<std::vector<float>>");
+}
+
+bool Application::loadConfigFile(QString sConfigFilename)
+{
+	auto fillVariable = [](QStringList strList, QString key, auto var) -> void
+	{
+		if (strList[0].contains(key, Qt::CaseSensitive))
+		{
+			*var = strList[1].toFloat();
+		}
+	};
+
+	auto fillVector = [](QStringList strList, QString key, int nbHarmonics, std::vector<float>& var) -> void
+	{
+		if (strList[0].contains(key, Qt::CaseSensitive))
+		{
+			var.clear();
+			for (int l_harmonics = 0; l_harmonics < nbHarmonics; l_harmonics++)
+				var.push_back(strList[1 + l_harmonics].toFloat());
+		}
+
+	};
+
+
+	QFile file(sConfigFilename);
+
+	// opens the file
+	if (!file.open(QIODevice::ReadOnly))
+	{
+		qDebug() << "[ERROR] (Application::loadConfigFile) Cannot open the Config File!";
+		m_bIsConfigFileLoaded = false;
+	}
+	else
+	{
+		QTextStream in(&file);
+		// 1st line
+		QString line;
+		
+		while (in.readLineInto(&line))
+		{
+			qDebug() << line;
+			QStringList list = line.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+
+			fillVariable(list, "nbHarmonics:", &m_i32NbHarmonics);
+			fillVariable(list, "duration:", &m_fDuration);
+			fillVariable(list, "samplingRate:", &m_fSamplingRate);
+
+			fillVector(list, "defaultHarmonicsAmplitudes:", m_i32NbHarmonics, m_vDefaultHarmonicsAmplitudes);
+			fillVector(list, "defaultHarmonicsPhases:", m_i32NbHarmonics, m_vDefaultHarmonicsPhases);
+
+			fillVector(list, "invFrequencyHarmonicsAmplitudes:", m_i32NbHarmonics, m_vInvFrequencyHarmonicsAmplitudes);
+			fillVector(list, "invFrequencyHarmonicsPhases:", m_i32NbHarmonics, m_vInvFrequencyHarmonicsPhases);
+
+			fillVector(list, "oboeHarmonicsAmplitudes:", m_i32NbHarmonics, m_vOboeHarmonicsAmplitudes);
+			fillVector(list, "oboeHarmonicsPhases:", m_i32NbHarmonics, m_vOboeHarmonicsPhases);
+		
+		}
+	
+		file.close();
+
+		m_bIsConfigFileLoaded = true;
+	}
+
+	return m_bIsConfigFileLoaded;
 }
 
 void Application::setWorkerConnections()
@@ -73,9 +143,7 @@ void Application::setWorkerConnections()
 	// and to the FFT
 	QObject::connect(m_pWorkerSignalGenerator, SIGNAL(sigBroadcastFullSignals(std::vector<std::vector<float>>)), m_pWorkerFFT, SLOT(setSignalValues(std::vector<std::vector<float>>)));
 	QObject::connect(m_pWorkerFFT, SIGNAL(sigBroadcastPowerSpectrumValues(std::vector<std::vector<float>>)), m_window, SLOT(setPowerSpectrum(std::vector<std::vector<float>>)));
-	
 
-	
 }
 
 void Application::moveWorkersToThread()
@@ -133,14 +201,27 @@ void Application::deleteWorkers()
 
 void Application::setSelectedInstrumentAndNote(int instrument, int note)
 {
-	// TODO get harmonics weight values depending on the instrument
+	// sets harmonics weight values depending on the instrument
+	std::vector<float> vAmplitudes;
+	std::vector<float> vPhases;
 
-	float fFps = 8000.0;
-	float fDuration = 1.0;
-	int nbHarmonics = 5;
-	std::vector<float> vAmplitude = { 0.8, 0.5, 0.3, 0.2, 0.1 };
-	std::vector<float> vPhase = { 0.0, 0.0, 0.0, 0.0 , 0.0};
-
+	switch (instrument)
+	{
+	case 0:
+		vAmplitudes = m_vDefaultHarmonicsAmplitudes;
+		vPhases = m_vDefaultHarmonicsPhases;
+		break;
+	case 1:
+		vAmplitudes = m_vInvFrequencyHarmonicsAmplitudes;
+		vPhases = m_vInvFrequencyHarmonicsPhases;
+		break;
+	case 2:
+		vAmplitudes = m_vOboeHarmonicsAmplitudes;
+		vPhases = m_vOboeHarmonicsPhases;
+		break;
+	}
+	
+	// sets frequency value depending on the note
 	float fFrequency = 0.0;
 	
 	switch (note)
@@ -169,5 +250,5 @@ void Application::setSelectedInstrumentAndNote(int instrument, int note)
 	}
 
 	
-	emit sigBroadcastSignalFeatures(fFps, fDuration, fFrequency, nbHarmonics, vAmplitude, vPhase);
+	emit sigBroadcastSignalFeatures(m_fSamplingRate, m_fDuration, fFrequency, m_i32NbHarmonics, vAmplitudes, vPhases);
 }

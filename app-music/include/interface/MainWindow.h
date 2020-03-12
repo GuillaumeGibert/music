@@ -63,9 +63,8 @@ private:
 private:
 	Ui::MainWindow *ui;									// Also Qt stuff
 	
-	BufferedSignalDisplay* m_pWHarmonicSignalDisplay;
-	BufferedSignalDisplay* m_pWFullSignalDisplay;
-	BufferedSignalDisplay* m_pWFullPowerSpectrumDisplay;
+	BufferedSignalDisplay* m_pWSignalDisplay;
+	BufferedSignalDisplay* m_pWPowerSpectrumDisplay;
 
 	int m_i32InstrumentIndex;
 	int m_i32NoteIndex;

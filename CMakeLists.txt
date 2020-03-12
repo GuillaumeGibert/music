@@ -51,7 +51,7 @@ project(music)
 #####AUTO######
 
 #QT
-set(CMAKE_PREFIX_PATH "/home/guillaume/software/Qt/5.14.1/gcc_64"  CACHE FILEPATH "path to qt5 vs2015 directory")
+set(CMAKE_PREFIX_PATH "C:/Qt/5.12.4/msvc2017"  CACHE FILEPATH "path to qt5 vs2015 directory")
 find_package(Qt5Widgets)
 find_package(Qt5Gui)
 find_package(Qt5Core)
